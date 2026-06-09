@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
-import { Auth } from './components/Auth';
-import { Dashboard } from './components/Dashboard';
+// שיניתי את הנתיב כאן:
+import { Auth } from './Auth'; 
+// וגם כאן, בהנחה ש-Dashboard נמצא גם הוא בתיקייה הראשית:
+import { Dashboard } from './Dashboard'; 
 import { Loader2, ShieldOff } from 'lucide-react';
 
 export default function App() {
@@ -23,7 +25,6 @@ export default function App() {
       setUser(session?.user ?? null);
     });
 
-    // בדיקת סטטוס אתר
     const checkSiteStatus = async () => {
       const { data } = await supabase
         .from('site_settings')
@@ -49,7 +50,6 @@ export default function App() {
     </div>
   );
 
-  // אתר מושבת – אדמין רואה הכל, שאר המשתמשים רואים מסך חסימה
   if (siteDown && (!user || !isAdmin(user.email))) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-6" dir="rtl">
@@ -61,15 +61,10 @@ export default function App() {
           </div>
           <h1 className="text-3xl font-bold text-white">האתר אינו זמין כרגע</h1>
           <p className="text-blue-200 text-lg leading-relaxed">{siteDownMessage}</p>
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-blue-300">
-            צוות האתר עובד על שיפורים ויחזור בהקדם האפשרי.
-          </div>
         </div>
       </div>
     );
   }
 
-  return user
-    ? <Dashboard user={user} siteDown={siteDown} setSiteDown={setSiteDown} siteDownMessage={siteDownMessage} setSiteDownMessage={setSiteDownMessage} />
-    : <Auth />;
+  return user ? <Dashboard /> : <Auth />;
 }
